@@ -107,6 +107,14 @@ const getToolIcon = (tool: string) => {
           style={{ ...styles.toolbarIcon, width: "16px", height: "16px" }}
         />
       );
+    case CANVAS_MODE.PIXELERASER:
+      return (
+        <img
+          src="https://img.icons8.com/ios-glyphs/344/erase.png"
+          alt=""
+          style={{ ...styles.toolbarIcon, width: "16px", height: "16px" }}
+        />
+      );
     case "clear":
       return <ClearIcon style={styles.toolbarIcon} />;
     default:
@@ -207,6 +215,7 @@ export const CanvasToolbar = (props: Props) => {
           { tool: CANVAS_MODE.FREEDRAW },
           { tool: CANVAS_MODE.PICKER },
           { tool: CANVAS_MODE.ERASER },
+          { tool: CANVAS_MODE.PIXELERASER},
           { tool: CANVAS_MODE.LINE },
           { tool: CANVAS_MODE.RECT },
           { tool: CANVAS_MODE.CIRCLE },

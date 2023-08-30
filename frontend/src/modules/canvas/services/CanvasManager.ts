@@ -1,6 +1,9 @@
 import { EventEmitter } from "events";
 import { fabric } from "fabric";
+//const fabric = require('./fabric.js')
 import { Canvas, IEvent, Object as FabricObject } from "fabric/fabric-impl";
+//import { Canvas, IEvent, Object as FabricObject } from "./fabric.js";
+
 import { CanvasStateManager } from "./CanvasStateManager";
 import { Color, createColor } from "material-ui-color";
 
@@ -12,6 +15,7 @@ export enum CANVAS_MODE {
   CIRCLE = "CIRCLE",
   RECT = "RECT",
   ERASER = "ERASER",
+  PIXELERASER = "PIXELERASER",
   TEXT = "TEXT",
   LINE = "LINE",
 }
@@ -144,10 +148,9 @@ export class CanvasManager extends EventEmitter {
   setMode(mode: string) {
     this.toolbar.mode = mode;
     const canvas = this.getCanvas();
-
     canvas.isDrawingMode = mode === CANVAS_MODE.FREEDRAW;
     const inPickerMode = mode === CANVAS_MODE.PICKER;
-    const inEraserMode = mode === CANVAS_MODE.ERASER;
+    const inEraserMode = ((mode === CANVAS_MODE.ERASER|| mode === CANVAS_MODE.PIXELERASER));
     if (inEraserMode) {
       canvas.hoverCursor = "not-allowed";
     } else if (inPickerMode) {
@@ -159,6 +162,9 @@ export class CanvasManager extends EventEmitter {
     }
     if (this.toolbar.selectedObject) {
       this.toolbar.selectedObject = undefined;
+    }
+    if (mode == CANVAS_MODE.PIXELERASER){
+      //canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
     }
     this.emit(CANVAS_TOPICS.TOOLBAR_CHANGED, this.canvasToolbar);
   }
@@ -196,7 +202,7 @@ export class CanvasManager extends EventEmitter {
     const canvas = this.getCanvas();
     const mode = this.toolbar.mode;
     const inPickerMode = mode === CANVAS_MODE.PICKER;
-    const inEraserMode = mode === CANVAS_MODE.ERASER;
+    const inEraserMode = ((mode === CANVAS_MODE.ERASER|| mode === CANVAS_MODE.PIXELERASER));
     const makeObjectsSelectable = inPickerMode || inEraserMode;
     // canvas.discardActiveObject();
     const objects = canvas.getObjects();
@@ -328,6 +334,11 @@ export class CanvasManager extends EventEmitter {
       this.removeObject(e.target);
       return;
     }
+
+    // if (this.toolbar.mode === CANVAS_MODE.PIXELERASER && e.target){
+      
+    //   return;
+    // }
 
     let addedObject: FabricObject;
 
